@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BRAC Architecture Summer 26</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+:root{
+    --bg-dark-core:#0a0b10;
+    --bg-secondary:#10131a;
+    --glass:rgba(255,255,255,0.06);
+    --glass-border:rgba(255,255,255,0.12);
+    --primary:#ab2229;
+    --primary-light:#ff4d57;
+    --accent:#ff5533;
+    --text:#ffffff;
+    --muted:#9ca3af;
+    --blur:18px;
+    --shadow:0 0 25px rgba(171,34,41,.35);
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    background:
+        radial-gradient(circle at top left, rgba(171,34,41,.18), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(255,85,51,.15), transparent 35%),
+        var(--bg-dark-core);
+    color:var(--text);
+    overflow-x:hidden;
+    font-family:'Manrope',sans-serif;
+    cursor:none;
+}
+
+/* CUSTOM CURSOR */
+.cursor{
+    width:18px;
+    height:18px;
+    border:2px solid rgba(255,255,255,.8);
+    border-radius:50%;
+    position:fixed;
+    pointer-events:none;
+    transform:translate(-50%,-50%);
+    z-index:9999;
+    mix-blend-mode:difference;
+    backdrop-filter:blur(4px);
+    box-shadow:
+        0 0 10px rgba(255,85,51,.7),
+        0 0 20px rgba(171,34,41,.5);
+}
+
+.cursor-dot{
+    width:6px;
+    height:6px;
+    background:white;
+    border-radius:50%;
+    position:fixed;
+    pointer-events:none;
+    transform:translate(-50%,-50%);
+    z-index:9999;
+}
+
+/* PRELOADER */
+#preloader{
+    position:fixed;
+    inset:0;
+    background:#05060a;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:10000;
+    transition:.8s;
+}
+
+.loader-ring{
+    width:90px;
+    height:90px;
+    border-radius:50%;
+    border:3px solid transparent;
+    border-top-color:var(--primary-light);
+    border-bottom-color:var(--accent);
+    animation:spin 1s linear infinite;
+    box-shadow:0 0 25px rgba(255,85,51,.5);
+}
+
+@keyframes spin{
+    to{ transform:rotate(360deg); }
+}
+
+.hide-preloader{
+    opacity:0;
+    visibility:hidden;
+}
+
+/* BACKGROUND GRID */
+.grid-bg{
+    position:fixed;
+    inset:0;
+    background-image:
+        linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+    background-size:50px 50px;
+    z-index:-2;
+    mask-image:radial-gradient(circle at center, black 20%, transparent 85%);
+}
+
+/* PARTICLES */
+.particles{
+    position:absolute;
+    inset:0;
+    overflow:hidden;
+}
+
+.particle{
+    position:absolute;
+    width:2px;
+    height:2px;
+    background:white;
+    opacity:.3;
+    border-radius:50%;
+    animation:float linear infinite;
+}
+
+@keyframes float{
+    from{
+        transform:translateY(0px);
+    }
+    to{
+        transform:translateY(-100vh);
+    }
+}
+
+/* TYPOGRAPHY */
+h1,h2,h3,h4{
+    font-family:'Space Grotesk',sans-serif;
+}
+
+/* GLASS */
+.glass{
+    background:var(--glass);
+    border:1px solid var(--glass-border);
+    backdrop-filter:blur(var(--blur));
+    -webkit-backdrop-filter:blur(var(--blur));
+}
+
+.glow{
+    box-shadow:
+        0 0 20px rgba(171,34,41,.25),
+        0 0 40px rgba(255,85,51,.12);
+}
+
+.section{
+    min-height:100vh;
+    padding:120px 7vw 80px;
+    position:relative;
+}
+
+/* NAV */
+nav{
+    position:fixed;
+    top:20px;
+    left:50%;
+    transform:translateX(-50%);
+    width:min(1200px,92%);
+    z-index:1000;
+}
+
+.nav-inner{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:14px 22px;
+    border-radius:22px;
+}
+
+.logo{
+    font-size:1.2rem;
+    font-weight:800;
+    letter-spacing:2px;
+}
+
+.logo span{
+    color:var(--accent);
+}
+
+.nav-links{
+    display:flex;
+    gap:14px;
+    align-items:center;
+}
+
+.nav-links a{
+    color:white;
+    text-decoration:none;
+    padding:10px 14px;
+    border-radius:14px;
+    transition:.3s;
+    font-size:.95rem;
+}
+
+.nav-links a:hover,
+.nav-links a.active{
+    background:rgba(255,255,255,.08);
+    color:#fff;
+    box-shadow:var(--shadow);
+}
+
+.mobile-btn{
+    display:none;
+}
+
+/* HERO */
+.hero{
+    display:grid;
+    grid-template-columns:1.1fr 1fr;
+    gap:40px;
+    align-items:center;
+}
+
+.hero h1{
+    font-size:clamp(3rem,8vw,7rem);
+    line-height:.9;
+    font-weight:800;
+}
+
+.hero p{
+    margin-top:25px;
+    color:var(--muted);
+    max-width:650px;
+    line-height:1.8;
+    font-size:1.05rem;
+}
+
+.gradient-text{
+    background:linear-gradient(90deg,var(--primary-light),var(--accent));
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.hero-buttons{
+    margin-top:35px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:16px;
+}
+
+.btn{
+    padding:14px 22px;
+    border-radius:18px;
+    border:none;
+    color:white;
+    cursor:pointer;
+    transition:.3s;
+    font-weight:700;
+}
+
+.btn-primary{
+    background:linear-gradient(135deg,var(--primary),var(--accent));
+    box-shadow:0 0 20px rgba(255,85,51,.3);
+}
+
+.btn-primary:hover{
+    transform:translateY(-4px) scale(1.02);
+}
+
+.btn-secondary{
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.1);
+}
+
+.hero-visual{
+    position:relative;
+    height:650px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.floating-card{
+    position:absolute;
+    border-radius:32px;
+    overflow:hidden;
+    transform-style:preserve-3d;
+    animation:floatCard 7s ease-in-out infinite;
+}
+
+.floating-card img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.card1{
+    width:420px;
+    height:540px;
+    z-index:3;
+}
+
+.card2{
+    width:260px;
+    height:320px;
+    left:0;
+    bottom:40px;
+    animation-delay:1s;
+}
+
+.card3{
+    width:220px;
+    height:260px;
+    right:0;
+    top:20px;
+    animation-delay:2s;
+}
+
+@keyframes floatCard{
+    0%,100%{
+        transform:translateY(0px) rotate3d(1,1,0,0deg);
+    }
+    50%{
+        transform:translateY(-18px) rotate3d(1,1,0,4deg);
+    }
+}
+
+/* TITLES */
+.section-title{
+    margin-bottom:60px;
+}
+
+.section-title h2{
+    font-size:clamp(2rem,5vw,4rem);
+}
+
+.section-title p{
+    margin-top:14px;
+    color:var(--muted);
+    max-width:700px;
+}
+
+/* ICONS */
+.icon-3d{
+    width:68px;
+    height:68px;
+    border-radius:20px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:
+        linear-gradient(145deg, rgba(255,255,255,.1), rgba(255,255,255,.02));
+    border:1px solid rgba(255,255,255,.12);
+    box-shadow:
+        inset 0 1px 1px rgba(255,255,255,.15),
+        0 10px 20px rgba(0,0,0,.4),
+        0 0 20px rgba(255,85,51,.15);
+    transform-style:preserve-3d;
+}
+
+.icon-3d svg{
+    width:32px;
+    height:32px;
+    filter:drop-shadow(0 0 8px rgba(255,85,51,.4));
+}
+
+/* INSTITUTION */
+.institution-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:24px;
+}
+
+.info-card{
+    border-radius:28px;
+    padding:28px;
+    transition:.35s;
+}
+
+.info-card:hover{
+    transform:translateY(-8px);
+}
+
+.info-card h3{
+    margin-top:18px;
+    margin-bottom:12px;
+    font-size:1.3rem;
+}
+
+.info-card p{
+    color:var(--muted);
+    line-height:1.7;
+}
+
+/* CAROUSEL */
+.carousel-wrapper{
+    perspective:1400px;
+    width:100%;
+    height:560px;
+    position:relative;
+    overflow:hidden;
+}
+
+.carousel-track{
+    width:100%;
+    height:100%;
+    position:absolute;
+    transform-style:preserve-3d;
+    transition:transform 1s ease;
+}
+
+.carousel-item{
+    position:absolute;
+    width:320px;
+    height:420px;
+    left:50%;
+    top:50%;
+    transform-style:preserve-3d;
+    margin-left:-160px;
+    margin-top:-210px;
+    border-radius:28px;
+    overflow:hidden;
+    border:1px solid rgba(255,255,255,.15);
+    box-shadow:0 20px 40px rgba(0,0,0,.45);
+}
+
+.carousel-item img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.carousel-overlay{
+    position:absolute;
+    inset:0;
+    background:linear-gradient(to top, rgba(0,0,0,.8), transparent 50%);
+    display:flex;
+    align-items:flex-end;
+    padding:25px;
+}
+
+/* STUDENTS */
+.students-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:24px;
+}
+
+.student-card{
+    border-radius:26px;
+    overflow:hidden;
+    transition:.35s;
+}
+
+.student-card:hover{
+    transform:translateY(-10px);
+}
+
+.student-image{
+    height:280px;
+    position:relative;
+}
+
+.student-image img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.student-content{
+    padding:22px;
+}
+
+.badge{
+    display:inline-flex;
+    padding:8px 12px;
+    border-radius:999px;
+    background:rgba(255,85,51,.12);
+    border:1px solid rgba(255,85,51,.2);
+    color:#fff;
+    font-size:.85rem;
+}
+
+/* PORTAL */
+.portal-wrapper{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:30px;
+}
+
+.portal-box{
+    border-radius:28px;
+    padding:30px;
+}
+
+input, textarea{
+    width:100%;
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.08);
+    color:white;
+    padding:15px;
+    border-radius:18px;
+    outline:none;
+}
+
+input:focus,
+textarea:focus{
+    border-color:rgba(255,85,51,.5);
+    box-shadow:0 0 15px rgba(255,85,51,.2);
+}
+
+.hidden{
+    display:none !important;
+}
+
+.dashboard-grid{
+    display:grid;
+    gap:18px;
+}
+
+.setting-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+    padding:18px;
+    border-radius:18px;
+    background:rgba(255,255,255,.04);
+}
+
+/* DEVELOPERS */
+.dev-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:24px;
+}
+
+.dev-card{
+    padding:28px;
+    border-radius:28px;
+    text-align:center;
+}
+
+.dev-avatar{
+    width:110px;
+    height:110px;
+    margin:auto;
+    border-radius:50%;
+    overflow:hidden;
+    border:3px solid rgba(255,255,255,.12);
+    box-shadow:0 0 30px rgba(255,85,51,.2);
+}
+
+.dev-avatar img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+/* CONTACT */
+.contact-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:30px;
+}
+
+footer{
+    padding:30px;
+    text-align:center;
+    color:var(--muted);
+}
+
+/* RESPONSIVE */
+@media(max-width:980px){
+
+    .hero,
+    .portal-wrapper,
+    .contact-grid{
+        grid-template-columns:1fr;
+    }
+
+    .hero-visual{
+        height:500px;
+    }
+
+    .card1{
+        width:300px;
+        height:420px;
+    }
+
+    .card2{
+        width:180px;
+        height:220px;
+    }
+
+    .card3{
+        width:170px;
+        height:210px;
+    }
+
+    .nav-links{
+        position:absolute;
+        top:80px;
+        left:0;
+        right:0;
+        flex-direction:column;
+        padding:20px;
+        border-radius:22px;
+        display:none;
+    }
+
+    .nav-links.show{
+        display:flex;
+    }
+
+    .mobile-btn{
+        display:block;
+    }
+}
+
+@media(max-width:640px){
+
+    .section{
+        padding:110px 20px 70px;
+    }
+
+    .hero h1{
+        font-size:3.2rem;
+    }
+
+    .carousel-item{
+        width:240px;
+        height:330px;
+        margin-left:-120px;
+        margin-top:-165px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div id="preloader">
+    <div class="loader-ring"></div>
+</div>
+
+<div class="grid-bg"></div>
+
+<div class="cursor"></div>
+<div class="cursor-dot"></div>
+
+<nav>
+    <div class="nav-inner glass glow">
+        <div class="logo">BRAC<span>ARCH</span> S26</div>
+
+        <div class="nav-links glass" id="navLinks">
+            <a href="#home" class="active">Home</a>
+            <a href="#institution">Institution</a>
+            <a href="#showcase">Showcase</a>
+            <a href="#students">Students</a>
+            <a href="#portal">Portal</a>
+            <a href="#developers">Developers</a>
+            <a href="#contact">Contact</a>
+        </div>
+
+        <button class="mobile-btn btn btn-secondary" id="mobileBtn">
+            Menu
+        </button>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="section hero" id="home">
+
+    <div class="particles" id="particles"></div>
+
+    <div>
+        <div class="badge mb-6">
+            Summer 26 Architecture Matrix
+        </div>
+
+        <h1>
+            FUTURE OF <span class="gradient-text">ARCHITECTURE</span>
+        </h1>
+
+        <p>
+            BRAC Architecture Summer 26 is a premium digital showcase designed to merge futuristic academic aesthetics, cyber-modern interaction, and immersive architectural storytelling into a single intelligent student platform.
+        </p>
+
+        <div class="hero-buttons">
+            <a href="#students" class="btn btn-primary">
+                Explore Students
+            </a>
+
+            <a href="#portal" class="btn btn-secondary">
+                Secure Portal
+            </a>
+        </div>
+    </div>
+
+    <div class="hero-visual">
+
+        <div class="floating-card card1 glass glow">
+            <img src="https://images.unsplash.com/photo-1511818966892-d7d671e672a2?q=80&w=1200&auto=format&fit=crop" alt="">
+        </div>
+
+        <div class="floating-card card2 glass glow">
+            <img src="https://images.unsplash.com/photo-1518005020951-eccb494ad742?q=80&w=1200&auto=format&fit=crop" alt="">
+        </div>
+
+        <div class="floating-card card3 glass glow">
+            <img src="https://images.unsplash.com/photo-1529429617124-aee711a5ac1c?q=80&w=1200&auto=format&fit=crop" alt="">
+        </div>
+
+    </div>
+</section>
+
+<!-- INSTITUTION -->
+<section class="section" id="institution">
+
+    <div class="section-title">
+        <h2>Institutional Framework</h2>
+        <p>
+            Designed with futuristic educational interaction, immersive identity systems, and advanced portfolio integration.
+        </p>
+    </div>
+
+    <div class="institution-grid">
+
+        <div class="info-card glass glow">
+            <div class="icon-3d">
+                <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="url(#g1)" stroke-width="2"/>
+                    <path d="M2 17L12 22L22 17" stroke="url(#g1)" stroke-width="2"/>
+                    <path d="M2 12L12 17L22 12" stroke="url(#g1)" stroke-width="2"/>
+                    <defs>
+                        <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+                            <stop stop-color="#ff5533"/>
+                            <stop offset="1" stop-color="#ff9a6b"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+
+            <h3>Immersive Design System</h3>
+
+            <p>
+                High-end glassmorphism architecture with layered depth, spatial UI transitions, premium interaction flow, and intelligent navigation.
+            </p>
+        </div>
+
+        <div class="info-card glass glow">
+            <div class="icon-3d">
+                <svg viewBox="0 0 24 24" fill="none">
+                    <rect x="3" y="4" width="18" height="16" rx="2" stroke="url(#g2)" stroke-width="2"/>
+                    <path d="M7 8H17" stroke="url(#g2)" stroke-width="2"/>
+                    <path d="M7 12H14" stroke="url(#g2)" stroke-width="2"/>
+                    <defs>
+                        <linearGradient id="g2" x1="0" y1="0" x2="1" y2="1">
+                            <stop stop-color="#ab2229"/>
+                            <stop offset="1" stop-color="#ff5533"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+
+            <h3>Student Matrix</h3>
+
+            <p>
+                Dynamic privacy-based portfolio architecture where visibility can be controlled through the secure admin portal.
+            </p>
+        </div>
+
+        <div class="info-card glass glow">
+            <div class="icon-3d">
+                <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M12 2V6" stroke="url(#g3)" stroke-width="2"/>
+                    <path d="M12 18V22" stroke="url(#g3)" stroke-width="2"/>
+                    <path d="M4.93 4.93L7.76 7.76" stroke="url(#g3)" stroke-width="2"/>
+                    <circle cx="12" cy="12" r="5" stroke="url(#g3)" stroke-width="2"/>
+                    <defs>
+                        <linearGradient id="g3" x1="0" y1="0" x2="1" y2="1">
+                            <stop stop-color="#ff5533"/>
+                            <stop offset="1" stop-color="#fff"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+
+            <h3>Interactive Intelligence</h3>
+
+            <p>
+                Smooth transitions, live state synchronization, animated interface systems, and optimized cyber-modern responsiveness.
+            </p>
+        </div>
+
+    </div>
+</section>
+
+<!-- SHOWCASE -->
+<section class="section" id="showcase">
+
+    <div class="section-title">
+        <h2>3D Architecture Showcase</h2>
+        <p>
+            Responsive futuristic carousel with auto-rotation, touch support, and immersive visual storytelling.
+        </p>
+    </div>
+
+    <div class="carousel-wrapper">
+
+        <div class="carousel-track" id="carouselTrack">
+
+            <div class="carousel-item glass">
+                <img src="https://images.unsplash.com/photo-1511818966892-d7d671e672a2?q=80&w=1200&auto=format&fit=crop">
+                <div class="carousel-overlay">
+                    <div>
+                        <h3 class="text-2xl font-bold">Neo Vertical Habitat</h3>
+                        <p class="text-gray-300">Adaptive urban architecture</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="carousel-item glass">
+                <img src="https://images.unsplash.com/photo-1494526585095-c41746248156?q=80&w=1200&auto=format&fit=crop">
+                <div class="carousel-overlay">
+                    <div>
+                        <h3 class="text-2xl font-bold">Cyber Civic Space</h3>
+                        <p class="text-gray-300">Hybrid social environments</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="carousel-item glass">
+                <img src="https://images.unsplash.com/photo-1518005020951-eccb494ad742?q=80&w=1200&auto=format&fit=crop">
+                <div class="carousel-overlay">
+                    <div>
+                        <h3 class="text-2xl font-bold">Fluid Residential Grid</h3>
+                        <p class="text-gray-300">Future human ecosystems</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="carousel-item glass">
+                <img src="https://images.unsplash.com/photo-1529429617124-aee711a5ac1c?q=80&w=1200&auto=format&fit=crop">
+                <div class="carousel-overlay">
+                    <div>
+                        <h3 class="text-2xl font-bold">Quantum Design Node</h3>
+                        <p class="text-gray-300">Experimental digital geometry</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="carousel-item glass">
+                <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1200&auto=format&fit=crop">
+                <div class="carousel-overlay">
+                    <div>
+                        <h3 class="text-2xl font-bold">Neon Urban Interface</h3>
+                        <p class="text-gray-300">Intelligent city integration</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</section>
+
+<!-- STUDENTS -->
+<section class="section" id="students">
+
+    <div class="section-title">
+        <h2>Student Matrix</h2>
+        <p>
+            Intelligent student portfolio cards integrated with secure visibility control.
+        </p>
+    </div>
+
+    <div class="students-grid" id="studentsGrid">
+
+        <div class="student-card glass glow" data-student="1">
+            <div class="student-image">
+                <img src="https://images.unsplash.com/photo-1494526585095-c41746248156?q=80&w=1200&auto=format&fit=crop">
+            </div>
+
+            <div class="student-content">
+                <div class="badge mb-3">Visible Portfolio</div>
+                <h3 class="text-2xl font-bold mb-2">Ariana Rahman</h3>
+                <p class="text-gray-400 leading-7">
+                    Experimental modular architecture focusing on climate-adaptive urban systems.
+                </p>
+            </div>
+        </div>
+
+        <div class="student-card glass glow" data-student="2">
+            <div class="student-image">
+                <img src="https://images.unsplash.com/photo-1518005020951-eccb494ad742?q=80&w=1200&auto=format&fit=crop">
+            </div>
+
+            <div class="student-content">
+                <div class="badge mb-3">Visible Portfolio</div>
+                <h3 class="text-2xl font-bold mb-2">Rayhan Karim</h3>
+                <p class="text-gray-400 leading-7">
+                    Futuristic public infrastructure systems with AI-generated environmental integration.
+                </p>
+            </div>
+        </div>
+
+        <div class="student-card glass glow" data-student="3">
+            <div class="student-image">
+                <img src="https://images.unsplash.com/photo-1529429617124-aee711a5ac1c?q=80&w=1200&auto=format&fit=crop">
+            </div>
+
+            <div class="student-content">
+                <div class="badge mb-3">Visible Portfolio</div>
+                <h3 class="text-2xl font-bold mb-2">Nova Islam</h3>
+                <p class="text-gray-400 leading-7">
+                    High-density cybernetic habitats inspired by fluid organic structural geometry.
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- PORTAL -->
+<section class="section" id="portal">
+
+    <div class="section-title">
+        <h2>Secure Portal</h2>
+        <p>
+            Student administration dashboard with synchronized visibility control and secure authentication.
+        </p>
+    </div>
+
+    <div class="portal-wrapper">
+
+        <!-- LOGIN -->
+        <div class="portal-box glass glow" id="loginBox">
+
+            <h3 class="text-3xl font-bold mb-6">
+                Portal Login
+            </h3>
+
+            <div class="space-y-4">
+
+                <input type="text" id="roll" placeholder="Roll Number">
+
+                <input type="password" id="pin" placeholder="PIN">
+
+                <button class="btn btn-primary w-full" id="loginBtn">
+                    Access Dashboard
+                </button>
+
+                <p id="loginMsg" class="text-red-400"></p>
+
+            </div>
+        </div>
+
+        <!-- DASHBOARD -->
+        <div class="portal-box glass glow hidden" id="dashboard">
+
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-3xl font-bold">
+                    Admin Dashboard
+                </h3>
+
+                <button class="btn btn-secondary" id="logoutBtn">
+                    Logout
+                </button>
+            </div>
+
+            <div class="dashboard-grid">
+
+                <div class="setting-row">
+                    <div>
+                        <h4 class="font-bold text-lg">Ariana Rahman</h4>
+                        <p class="text-gray-400">Portfolio visibility</p>
+                    </div>
+
+                    <input type="checkbox" checked class="visibility-toggle" data-student="1">
+                </div>
+
+                <div class="setting-row">
+                    <div>
+                        <h4 class="font-bold text-lg">Rayhan Karim</h4>
+                        <p class="text-gray-400">Portfolio visibility</p>
+                    </div>
+
+                    <input type="checkbox" checked class="visibility-toggle" data-student="2">
+                </div>
+
+                <div class="setting-row">
+                    <div>
+                        <h4 class="font-bold text-lg">Nova Islam</h4>
+                        <p class="text-gray-400">Portfolio visibility</p>
+                    </div>
+
+                    <input type="checkbox" checked class="visibility-toggle" data-student="3">
+                </div>
+
+                <button class="btn btn-primary mt-4" id="saveBtn">
+                    Save Changes
+                </button>
+
+                <p id="saveMsg" class="text-green-400"></p>
+
+            </div>
+        </div>
+
+        <!-- SIDE INFO -->
+        <div class="portal-box glass glow">
+
+            <h3 class="text-3xl font-bold mb-6">
+                Security Layer
+            </h3>
+
+            <p class="text-gray-400 leading-8">
+                Multi-state synchronization system with dynamic student visibility control, secure authentication architecture, and responsive dashboard interaction.
+            </p>
+
+            <div class="mt-10 space-y-5">
+
+                <div class="setting-row">
+                    <span>Encrypted Session</span>
+                    <span class="badge">ACTIVE</span>
+                </div>
+
+                <div class="setting-row">
+                    <span>Matrix Sync</span>
+                    <span class="badge">ONLINE</span>
+                </div>
+
+                <div class="setting-row">
+                    <span>Cloud State</span>
+                    <span class="badge">SECURE</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+<!-- DEVELOPERS -->
+<section class="section" id="developers">
+
+    <div class="section-title">
+        <h2>Development Team</h2>
+        <p>
+            Crafted with futuristic interface engineering, modern frontend architecture, and immersive interaction design.
+        </p>
+    </div>
+
+    <div class="dev-grid">
+
+        <div class="dev-card glass glow">
+            <div class="dev-avatar">
+                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1200&auto=format&fit=crop">
+            </div>
+
+            <h3 class="text-2xl font-bold mt-5">
+                Tofayel Ahamed
+            </h3>
+
+            <p class="text-gray-400 mt-3 leading-7">
+                Full-stack futuristic UI engineer focused on immersive cyber-modern experience systems.
+            </p>
+        </div>
+
+        <div class="dev-card glass glow">
+            <div class="dev-avatar">
+                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1200&auto=format&fit=crop">
+            </div>
+
+            <h3 class="text-2xl font-bold mt-5">
+                Neo Visual Lab
+            </h3>
+
+            <p class="text-gray-400 mt-3 leading-7">
+                Specialized in premium motion interaction, spatial interface design, and architecture visualization.
+            </p>
+        </div>
+
+    </div>
+</section>
+
+<!-- CONTACT -->
+<section class="section" id="contact">
+
+    <div class="section-title">
+        <h2>Contact & Collaboration</h2>
+        <p>
+            Reach out for institutional integration, student collaboration, or future showcase development.
+        </p>
+    </div>
+
+    <div class="contact-grid">
+
+        <div class="glass glow p-8 rounded-[30px]">
+            <h3 class="text-3xl font-bold mb-6">
+                Send Message
+            </h3>
+
+            <div class="space-y-5">
+
+                <input type="text" placeholder="Your Name">
+
+                <input type="email" placeholder="Email Address">
+
+                <textarea rows="6" placeholder="Message"></textarea>
+
+                <button class="btn btn-primary">
+                    Send Message
+                </button>
+
+            </div>
+        </div>
+
+        <div class="glass glow p-8 rounded-[30px]">
+
+            <h3 class="text-3xl font-bold mb-6">
+                BRAC Architecture
+            </h3>
+
+            <p class="text-gray-400 leading-8">
+                A cyber-futuristic digital architecture showcase blending institutional identity, immersive design systems, and intelligent student interaction.
+            </p>
+
+            <div class="mt-10 space-y-5">
+
+                <div class="setting-row">
+                    <span>Email</span>
+                    <span>summer26@bracarch.edu</span>
+                </div>
+
+                <div class="setting-row">
+                    <span>Location</span>
+                    <span>Dhaka, Bangladesh</span>
+                </div>
+
+                <div class="setting-row">
+                    <span>Status</span>
+                    <span class="badge">ONLINE</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<footer>
+    © 2026 BRAC Architecture Summer 26 — Futuristic Student Matrix
+</footer>
+
+<script>
+/* PRELOADER */
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        document.getElementById('preloader').classList.add('hide-preloader');
+    }, 900);
+});
+
+/* CUSTOM CURSOR */
+const cursor = document.querySelector('.cursor');
+const cursorDot = document.querySelector('.cursor-dot');
+
+window.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+
+    cursorDot.style.left = e.clientX + 'px';
+    cursorDot.style.top = e.clientY + 'px';
+});
+
+/* PARTICLES */
+const particlesContainer = document.getElementById('particles');
+
+for(let i=0;i<55;i++){
+    const p = document.createElement('div');
+    p.classList.add('particle');
+
+    p.style.left = Math.random() * 100 + '%';
+    p.style.top = Math.random() * 100 + '%';
+    p.style.animationDuration = (10 + Math.random()*20) + 's';
+    p.style.opacity = Math.random() * .7;
+
+    particlesContainer.appendChild(p);
+}
+
+/* MOBILE MENU */
+const mobileBtn = document.getElementById('mobileBtn');
+const navLinks = document.getElementById('navLinks');
+
+mobileBtn.addEventListener('click', () => {
+    navLinks.classList.toggle('show');
+});
+
+/* ACTIVE NAV */
+const sections = document.querySelectorAll('section');
+const navItems = document.querySelectorAll('.nav-links a');
+
+window.addEventListener('scroll', () => {
+
+    let current = '';
+
+    sections.forEach(section => {
+        const top = window.scrollY;
+        const offset = section.offsetTop - 200;
+        const height = section.offsetHeight;
+
+        if(top >= offset && top < offset + height){
+            current = section.getAttribute('id');
+        }
+    });
+
+    navItems.forEach(link => {
+        link.classList.remove('active');
+
+        if(link.getAttribute('href').includes(current)){
+            link.classList.add('active');
+        }
+    });
+});
+
+/* 3D CAROUSEL */
+const track = document.getElementById('carouselTrack');
+const items = document.querySelectorAll('.carousel-item');
+
+let angle = 0;
+const total = items.length;
+const step = 360 / total;
+
+function setupCarousel(){
+    items.forEach((item, i) => {
+        const rotateY = step * i;
+        item.style.transform =
+            `rotateY(${rotateY}deg) translateZ(450px)`;
+    });
+}
+
+setupCarousel();
+
+function rotateCarousel(){
+    track.style.transform = `rotateY(${angle}deg)`;
+}
+
+let autoRotate = setInterval(() => {
+    angle -= step;
+    rotateCarousel();
+}, 3500);
+
+/* DRAG */
+let startX = 0;
+let isDragging = false;
+
+function startDrag(x){
+    isDragging = true;
+    startX = x;
+    clearInterval(autoRotate);
+}
+
+function drag(x){
+    if(!isDragging) return;
+
+    const delta = x - startX;
+    angle += delta * 0.2;
+    rotateCarousel();
+    startX = x;
+}
+
+function endDrag(){
+    isDragging = false;
+
+    autoRotate = setInterval(() => {
+        angle -= step;
+        rotateCarousel();
+    }, 3500);
+}
+
+track.addEventListener('mousedown', e => startDrag(e.clientX));
+window.addEventListener('mousemove', e => drag(e.clientX));
+window.addEventListener('mouseup', endDrag);
+
+track.addEventListener('touchstart', e => startDrag(e.touches[0].clientX));
+window.addEventListener('touchmove', e => drag(e.touches[0].clientX));
+window.addEventListener('touchend', endDrag);
+
+/* LOGIN SYSTEM */
+const loginBtn = document.getElementById('loginBtn');
+const loginMsg = document.getElementById('loginMsg');
+const loginBox = document.getElementById('loginBox');
+const dashboard = document.getElementById('dashboard');
+
+loginBtn.addEventListener('click', () => {
+
+    const roll = document.getElementById('roll').value;
+    const pin = document.getElementById('pin').value;
+
+    if(roll === '26101001' && pin === '2026'){
+        loginMsg.textContent = '';
+        loginBox.classList.add('hidden');
+        dashboard.classList.remove('hidden');
+    }else{
+        loginMsg.textContent = 'Invalid credentials.';
+    }
+});
+
+/* LOGOUT */
+document.getElementById('logoutBtn').addEventListener('click', () => {
+    dashboard.classList.add('hidden');
+    loginBox.classList.remove('hidden');
+});
+
+/* PRIVACY SYSTEM */
+const toggles = document.querySelectorAll('.visibility-toggle');
+const studentCards = document.querySelectorAll('.student-card');
+const saveMsg = document.getElementById('saveMsg');
+
+function syncVisibility(){
+
+    toggles.forEach(toggle => {
+
+        const id = toggle.dataset.student;
+
+        studentCards.forEach(card => {
+
+            if(card.dataset.student === id){
+
+                if(toggle.checked){
+                    card.style.display = 'block';
+                }else{
+                    card.style.display = 'none';
+                }
+            }
+        });
+    });
+}
+
+toggles.forEach(toggle => {
+    toggle.addEventListener('change', syncVisibility);
+});
+
+/* SAVE */
+document.getElementById('saveBtn').addEventListener('click', () => {
+
+    syncVisibility();
+
+    localStorage.setItem('studentPrivacy',
+        JSON.stringify(
+            [...toggles].map(t => ({
+                id:t.dataset.student,
+                checked:t.checked
+            }))
+        )
+    );
+
+    saveMsg.textContent = 'Changes synced successfully.';
+
+    setTimeout(() => {
+        saveMsg.textContent = '';
+    }, 3000);
+});
+
+/* LOAD SAVED */
+window.addEventListener('DOMContentLoaded', () => {
+
+    const saved = JSON.parse(localStorage.getItem('studentPrivacy'));
+
+    if(saved){
+
+        saved.forEach(item => {
+
+            toggles.forEach(toggle => {
+
+                if(toggle.dataset.student === item.id){
+                    toggle.checked = item.checked;
+                }
+            });
+        });
+
+        syncVisibility();
+    }
+});
+
+/* SMOOTH NAV CLOSE */
+document.querySelectorAll('.nav-links a').forEach(link => {
+
+    link.addEventListener('click', () => {
+        navLinks.classList.remove('show');
+    });
+});
+</script>
+
+</body>
+</html>
