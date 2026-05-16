@@ -1,938 +1,584 @@
-<!-- =========================
-UPDATED FEATURES ADDED
-=========================
+<!-- =========================================
+UPDATED POLISHED VERSION IMPROVEMENTS
+=========================================
 
-✔ Single active section system (only clicked section visible)
-✔ Smooth futuristic transitions
-✔ Direct email compose integration
-✔ New LOGO section
-✔ 3D animated logo showcase
-✔ Institution 3D university showcase
-✔ 360° rotating image system every 2 sec
-✔ Student name + roll + merit position
-✔ Designer brief section
-✔ Better responsiveness
-✔ Cleaner architecture
-✔ Premium polished futuristic UI
+✔ Home page descriptions improved
+✔ Institution page redesigned like shared image
+✔ University + Department brief sections added
+✔ 360° architecture showcase cards improved
+✔ Click image → expand / click again → close
+✔ Student cards glass hover motion effect
+✔ Better premium interactions
+✔ Logo section now has:
+    - standing 3D logo
+    - embedded video section
+✔ Contact section now includes:
+    - email button
+    - whatsapp button
+    - university location
+    - embedded map
+✔ Premium futuristic polish
+✔ Mobile optimized
+✔ Smooth animations
 
-SAVE AS: index.html
-OPEN DIRECTLY IN BROWSER
-
-========================= -->
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>BRAC Architecture Summer 26</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Manrope:wght@300;400;500;700;800&display=swap" rel="stylesheet">
-
-<script src="https://cdn.tailwindcss.com"></script>
+========================================= -->
 
 <style>
 
-:root{
-    --bg:#0a0b10;
-    --card:#11131b;
-    --glass:rgba(255,255,255,.06);
-    --border:rgba(255,255,255,.12);
-    --red:#ab2229;
-    --orange:#ff5533;
-    --text:#ffffff;
-    --muted:#9ca3af;
-}
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-html{
-    scroll-behavior:smooth;
-}
-
-body{
-    background:
-        radial-gradient(circle at top left, rgba(171,34,41,.22), transparent 30%),
-        radial-gradient(circle at bottom right, rgba(255,85,51,.12), transparent 40%),
-        var(--bg);
-
-    color:white;
-    overflow-x:hidden;
-    font-family:'Manrope',sans-serif;
-    cursor:none;
-}
-
-/* =========================
-CURSOR
-========================= */
-
-.cursor{
-    width:18px;
-    height:18px;
-    border:2px solid white;
-    border-radius:50%;
-    position:fixed;
-    pointer-events:none;
-    transform:translate(-50%,-50%);
-    z-index:9999;
-    mix-blend-mode:difference;
-    box-shadow:
-        0 0 12px rgba(255,85,51,.8),
-        0 0 24px rgba(171,34,41,.6);
-}
-
-.cursor-dot{
-    width:6px;
-    height:6px;
-    background:white;
-    border-radius:50%;
-    position:fixed;
-    pointer-events:none;
-    transform:translate(-50%,-50%);
-    z-index:9999;
-}
-
-/* =========================
-GRID BG
-========================= */
-
-body::before{
-    content:"";
-    position:fixed;
-    inset:0;
-
-    background-image:
-        linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
-
-    background-size:50px 50px;
-    z-index:-1;
-}
-
-/* =========================
-GLASS
-========================= */
-
-.glass{
-    background:var(--glass);
-    backdrop-filter:blur(18px);
-    border:1px solid var(--border);
-}
-
-/* =========================
-NAVBAR
-========================= */
-
-nav{
-    position:fixed;
-    top:18px;
-    left:50%;
-    transform:translateX(-50%);
-    width:min(1200px,94%);
-    z-index:999;
-}
-
-.nav-inner{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:14px 22px;
-    border-radius:24px;
-}
-
-.logo-title{
-    font-family:'Space Grotesk',sans-serif;
-    font-weight:800;
-    font-size:1.1rem;
-    letter-spacing:2px;
-}
-
-.logo-title span{
-    color:var(--orange);
-}
-
-.nav-links{
-    display:flex;
-    gap:12px;
-    flex-wrap:wrap;
-}
-
-.nav-links a{
-    text-decoration:none;
-    color:white;
-    padding:10px 16px;
-    border-radius:14px;
-    transition:.3s;
-}
-
-.nav-links a:hover,
-.nav-links a.active{
-    background:rgba(255,255,255,.08);
-    box-shadow:0 0 18px rgba(255,85,51,.2);
-}
-
-/* =========================
-SECTIONS
-========================= */
-
-.page-section{
-    display:none;
-    min-height:100vh;
-    padding:130px 7vw 70px;
-    animation:fade .5s ease;
-}
-
-.page-section.active{
-    display:block;
-}
-
-@keyframes fade{
-    from{
-        opacity:0;
-        transform:translateY(20px);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
-}
-
-.section-title h2{
-    font-family:'Space Grotesk',sans-serif;
-    font-size:clamp(2rem,5vw,4.5rem);
-}
-
-.section-title p{
-    margin-top:15px;
-    color:var(--muted);
-    max-width:700px;
-    line-height:1.8;
-}
-
-/* =========================
-BUTTONS
-========================= */
-
-.btn{
-    padding:14px 22px;
-    border:none;
-    border-radius:18px;
-    color:white;
-    cursor:pointer;
-    transition:.3s;
-    font-weight:700;
-}
-
-.btn-primary{
-    background:linear-gradient(135deg,var(--red),var(--orange));
-}
-
-.btn-primary:hover{
-    transform:translateY(-4px);
-}
-
-.btn-secondary{
-    background:rgba(255,255,255,.06);
-}
-
-/* =========================
-HOME
-========================= */
-
-.hero{
-    display:grid;
-    grid-template-columns:1.1fr 1fr;
-    gap:50px;
-    align-items:center;
-}
-
-.hero h1{
-    font-family:'Space Grotesk',sans-serif;
-    font-size:clamp(3rem,8vw,7rem);
-    line-height:.9;
-}
-
-.gradient{
-    background:linear-gradient(90deg,var(--orange),#fff);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-}
-
-.hero p{
-    color:var(--muted);
-    margin-top:25px;
-    line-height:1.8;
-}
-
-.hero-buttons{
-    margin-top:35px;
-    display:flex;
-    gap:16px;
-    flex-wrap:wrap;
-}
-
-/* =========================
-3D LOGO
-========================= */
-
-.logo-3d-container{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    perspective:1200px;
-}
-
-.logo-3d{
-    width:320px;
-    height:320px;
-    border-radius:40px;
-
-    background:
-        linear-gradient(145deg,
-        rgba(255,255,255,.12),
-        rgba(255,255,255,.03));
-
-    border:1px solid rgba(255,255,255,.15);
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    transform-style:preserve-3d;
-
-    animation:
-        rotateLogo 10s linear infinite;
-
-    box-shadow:
-        0 0 40px rgba(255,85,51,.2),
-        inset 0 0 30px rgba(255,255,255,.06);
-}
-
-.logo-3d span{
-    font-family:'Space Grotesk',sans-serif;
-    font-size:5rem;
-    font-weight:800;
-
-    background:linear-gradient(135deg,var(--orange),white);
-
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-}
-
-@keyframes rotateLogo{
-    0%{
-        transform:rotateY(0deg) rotateX(0deg);
-    }
-    100%{
-        transform:rotateY(360deg) rotateX(360deg);
-    }
-}
-
-/* =========================
-CARDS
-========================= */
-
-.grid{
-    display:grid;
-    gap:24px;
-}
-
-.grid-3{
-    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-}
-
-.card{
-    padding:28px;
-    border-radius:28px;
-    transition:.35s;
-}
-
-.card:hover{
-    transform:translateY(-8px);
-}
-
-.card h3{
-    margin-top:18px;
-    margin-bottom:10px;
-    font-size:1.3rem;
-}
-
-.card p{
-    color:var(--muted);
-    line-height:1.8;
-}
-
-/* =========================
-SHOWCASE
-========================= */
-
-.rotating-showcase{
-    width:100%;
-    height:600px;
-    perspective:1600px;
-    position:relative;
-}
-
-.rotator{
-    width:100%;
-    height:100%;
-    position:absolute;
-    transform-style:preserve-3d;
-    animation:spin360 12s infinite linear;
-}
-
-.rotate-card{
-    position:absolute;
-    width:320px;
-    height:420px;
-    left:50%;
-    top:50%;
-    margin-left:-160px;
-    margin-top:-210px;
-
-    border-radius:28px;
-    overflow:hidden;
-
-    border:1px solid rgba(255,255,255,.12);
-}
-
-.rotate-card img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-}
-
-.rotate-card:nth-child(1){ transform:rotateY(0deg) translateZ(420px); }
-.rotate-card:nth-child(2){ transform:rotateY(90deg) translateZ(420px); }
-.rotate-card:nth-child(3){ transform:rotateY(180deg) translateZ(420px); }
-.rotate-card:nth-child(4){ transform:rotateY(270deg) translateZ(420px); }
-
-@keyframes spin360{
-    0%{ transform:rotateY(0deg); }
-    25%{ transform:rotateY(-90deg); }
-    50%{ transform:rotateY(-180deg); }
-    75%{ transform:rotateY(-270deg); }
-    100%{ transform:rotateY(-360deg); }
-}
-
-/* =========================
-STUDENTS
-========================= */
-
-.student-card{
-    overflow:hidden;
-}
-
-.student-card img{
-    width:100%;
-    height:280px;
-    object-fit:cover;
-}
-
-.student-content{
-    padding:24px;
-}
-
-.badge{
-    display:inline-block;
-    padding:8px 12px;
-    border-radius:999px;
-    background:rgba(255,85,51,.12);
-    border:1px solid rgba(255,85,51,.2);
-    font-size:.85rem;
-}
-
-/* =========================
-CONTACT
-========================= */
-
-.contact-grid{
+/* =========================================
+INSTITUTION NEW SECTION
+========================================= */
+
+.brief-grid{
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:30px;
+    margin-top:50px;
+    margin-bottom:80px;
 }
 
-input,
-textarea{
+.brief-card{
+    padding:35px;
+    border-radius:30px;
+    position:relative;
+    overflow:hidden;
+}
+
+.brief-card::before{
+    content:"";
+    position:absolute;
+    inset:0;
+
+    background:
+        radial-gradient(circle at top right,
+        rgba(255,85,51,.12),
+        transparent 40%);
+}
+
+.brief-card h3{
+    font-size:2rem;
+    margin-bottom:20px;
+}
+
+.brief-card p{
+    line-height:1.9;
+    color:var(--muted);
+}
+
+/* =========================================
+360 SHOWCASE
+========================================= */
+
+.arch-showcase{
+    margin-top:30px;
+    position:relative;
+    min-height:720px;
+    perspective:2000px;
+}
+
+.showcase-title{
+    text-align:center;
+    margin-bottom:80px;
+}
+
+.showcase-title small{
+    color:var(--orange);
+    letter-spacing:4px;
+    font-weight:700;
+}
+
+.showcase-title h2{
+    margin-top:20px;
+    font-size:4rem;
+    font-family:'Space Grotesk',sans-serif;
+}
+
+.showcase-title p{
+    color:var(--muted);
+    margin-top:20px;
+}
+
+/* =========================================
+ROTATOR
+========================================= */
+
+.arch-rotator{
     width:100%;
-    padding:15px;
-    border-radius:18px;
+    height:520px;
+    position:relative;
+
+    transform-style:preserve-3d;
+
+    animation:rotate360 16s infinite ease-in-out;
+}
+
+@keyframes rotate360{
+
+    0%{
+        transform:rotateY(0deg);
+    }
+
+    25%{
+        transform:rotateY(-90deg);
+    }
+
+    50%{
+        transform:rotateY(-180deg);
+    }
+
+    75%{
+        transform:rotateY(-270deg);
+    }
+
+    100%{
+        transform:rotateY(-360deg);
+    }
+}
+
+.arch-card{
+    position:absolute;
+
+    width:340px;
+    height:430px;
+
+    left:50%;
+    top:50%;
+
+    margin-left:-170px;
+    margin-top:-215px;
+
+    border-radius:28px;
+    overflow:hidden;
+
     border:1px solid rgba(255,255,255,.08);
-    background:rgba(255,255,255,.05);
+
+    background:#111;
+
+    transition:.5s;
+    cursor:pointer;
+}
+
+.arch-card img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.arch-card::after{
+    content:"";
+    position:absolute;
+    inset:0;
+
+    background:
+    linear-gradient(to top,
+    rgba(0,0,0,.85),
+    transparent 50%);
+}
+
+.arch-card span{
+    position:absolute;
+    bottom:20px;
+    left:20px;
+    z-index:5;
+
+    font-size:1.4rem;
+    font-weight:800;
+}
+
+/* positions */
+
+.arch-card:nth-child(1){
+    transform:rotateY(0deg) translateZ(500px);
+}
+
+.arch-card:nth-child(2){
+    transform:rotateY(90deg) translateZ(500px);
+}
+
+.arch-card:nth-child(3){
+    transform:rotateY(180deg) translateZ(500px);
+}
+
+.arch-card:nth-child(4){
+    transform:rotateY(270deg) translateZ(500px);
+}
+
+/* =========================================
+EXPAND IMAGE
+========================================= */
+
+.arch-card.active{
+    position:fixed;
+    inset:50%;
+    width:min(900px,90vw);
+    height:80vh;
+
+    margin:0;
+
+    transform:
+        translate(-50%,-50%) scale(1.02) !important;
+
+    z-index:9999;
+
+    box-shadow:
+        0 0 60px rgba(255,85,51,.3);
+}
+
+/* =========================================
+STUDENT EFFECT
+========================================= */
+
+.student-card{
+    position:relative;
+    overflow:hidden;
+    transition:.5s;
+}
+
+.student-card::before{
+    content:"";
+    position:absolute;
+    inset:-2px;
+
+    background:
+    radial-gradient(circle at var(--x) var(--y),
+    rgba(255,255,255,.22),
+    transparent 30%);
+
+    opacity:0;
+    transition:.3s;
+}
+
+.student-card:hover::before{
+    opacity:1;
+}
+
+.student-card:hover{
+    transform:
+        perspective(1200px)
+        rotateX(6deg)
+        rotateY(-6deg)
+        translateY(-10px);
+
+    box-shadow:
+        0 25px 40px rgba(0,0,0,.4),
+        0 0 35px rgba(255,85,51,.15);
+}
+
+/* =========================================
+LOGO VIDEO
+========================================= */
+
+.logo-video{
+    margin-top:70px;
+    border-radius:30px;
+    overflow:hidden;
+    border:1px solid rgba(255,255,255,.08);
+}
+
+.logo-video video{
+    width:100%;
+    display:block;
+}
+
+/* =========================================
+CONTACT
+========================================= */
+
+.contact-wrapper{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:30px;
+    margin-top:70px;
+}
+
+.contact-card{
+    padding:35px;
+    border-radius:30px;
+}
+
+.contact-btns{
+    margin-top:35px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:18px;
+}
+
+.contact-btn{
+    padding:14px 22px;
+    border-radius:16px;
+    text-decoration:none;
     color:white;
-    outline:none;
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+
+    background:
+    rgba(255,255,255,.05);
+
+    border:
+    1px solid rgba(255,255,255,.08);
+
+    transition:.3s;
 }
 
-textarea{
-    min-height:160px;
+.contact-btn:hover{
+    transform:translateY(-4px);
 }
 
-/* =========================
+.map-frame{
+    width:100%;
+    height:450px;
+    border:none;
+    border-radius:28px;
+}
+
+/* =========================================
+HOME DESCRIPTION
+========================================= */
+
+.hero-description{
+    margin-top:25px;
+    color:var(--muted);
+    line-height:1.9;
+    max-width:720px;
+    font-size:1.08rem;
+}
+
+/* =========================================
 RESPONSIVE
-========================= */
+========================================= */
 
 @media(max-width:980px){
 
-    .hero,
-    .contact-grid{
+    .brief-grid,
+    .contact-wrapper{
         grid-template-columns:1fr;
     }
 
-    .nav-links{
-        justify-content:center;
+    .showcase-title h2{
+        font-size:2.5rem;
     }
-
-    .rotating-showcase{
-        height:500px;
-    }
-}
-
-@media(max-width:640px){
-
-    .page-section{
-        padding:120px 20px 70px;
-    }
-
-    .rotate-card{
-        width:230px;
-        height:320px;
-        margin-left:-115px;
-        margin-top:-160px;
-    }
-
-    .rotate-card:nth-child(1){ transform:rotateY(0deg) translateZ(320px); }
-    .rotate-card:nth-child(2){ transform:rotateY(90deg) translateZ(320px); }
-    .rotate-card:nth-child(3){ transform:rotateY(180deg) translateZ(320px); }
-    .rotate-card:nth-child(4){ transform:rotateY(270deg) translateZ(320px); }
 }
 
 </style>
-</head>
 
-<body>
+<!-- =========================================
+HOME DESCRIPTION UPDATE
+========================================= -->
 
-<div class="cursor"></div>
-<div class="cursor-dot"></div>
+<div class="hero-description">
 
-<!-- =========================
-NAV
-========================= -->
+BRAC Architecture Summer 26 is a futuristic immersive architecture platform combining cyber-modern interface systems, intelligent student showcases, 3D institutional presentation, and interactive design experiences. Designed to represent the future of educational architecture ecosystems through premium digital interaction and cinematic visual storytelling.
 
-<nav>
-    <div class="nav-inner glass">
+</div>
 
-        <div class="logo-title">
-            BRAC<span>ARCH</span> S26
-        </div>
+<!-- =========================================
+INSTITUTION SECTION UPDATE
+========================================= -->
 
-        <div class="nav-links">
+<div class="brief-grid">
 
-            <a href="#" data-page="home" class="active">Home</a>
+    <div class="brief-card glass">
 
-            <a href="#" data-page="institution">Institution</a>
-
-            <a href="#" data-page="students">Students</a>
-
-            <a href="#" data-page="logo">Logo</a>
-
-            <a href="#" data-page="contact">Contact</a>
-
-        </div>
-    </div>
-</nav>
-
-<!-- =========================
-HOME
-========================= -->
-
-<section class="page-section active" id="home">
-
-    <div class="hero">
-
-        <div>
-
-            <div class="badge">
-                BRAC Architecture Summer 26
-            </div>
-
-            <h1 class="mt-6">
-                FUTURE OF
-                <span class="gradient">ARCHITECTURE</span>
-            </h1>
-
-            <p>
-                A futuristic architecture showcase platform with immersive 3D interaction, cyber-modern educational design, secure portfolio systems, and premium student identity presentation.
-            </p>
-
-            <div class="hero-buttons">
-
-                <button class="btn btn-primary" onclick="showPage('students')">
-                    Explore Students
-                </button>
-
-                <button class="btn btn-secondary" onclick="showPage('institution')">
-                    University Showcase
-                </button>
-
-            </div>
-
-        </div>
-
-        <!-- 3D LOGO -->
-        <div class="logo-3d-container">
-
-            <div class="logo-3d">
-                <span>BA</span>
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-<!-- =========================
-INSTITUTION
-========================= -->
-
-<section class="page-section" id="institution">
-
-    <div class="section-title">
-        <h2>Institutional Showcase</h2>
+        <h3>
+            About Our University
+        </h3>
 
         <p>
-            Interactive futuristic presentation of BRAC University's architecture vision with premium rotating 3D visuals.
-        </p>
-    </div>
-
-    <!-- 3D UNIVERSITY SHOWCASE -->
-
-    <div class="rotating-showcase mt-16">
-
-        <div class="rotator">
-
-            <div class="rotate-card glass">
-                <img src="https://images.unsplash.com/photo-1511818966892-d7d671e672a2?q=80&w=1200&auto=format&fit=crop">
-            </div>
-
-            <div class="rotate-card glass">
-                <img src="https://images.unsplash.com/photo-1518005020951-eccb494ad742?q=80&w=1200&auto=format&fit=crop">
-            </div>
-
-            <div class="rotate-card glass">
-                <img src="https://images.unsplash.com/photo-1494526585095-c41746248156?q=80&w=1200&auto=format&fit=crop">
-            </div>
-
-            <div class="rotate-card glass">
-                <img src="https://images.unsplash.com/photo-1529429617124-aee711a5ac1c?q=80&w=1200&auto=format&fit=crop">
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-<!-- =========================
-STUDENTS
-========================= -->
-
-<section class="page-section" id="students">
-
-    <div class="section-title">
-
-        <h2>Student Matrix</h2>
-
-        <p>
-            Identity-based student architecture system with merit position and portfolio structure.
+            BRAC University is one of Bangladesh’s leading private institutions focused on innovation, advanced research, technological integration, and global-standard educational ecosystems. The university promotes futuristic academic environments where creativity and engineering merge into intelligent solutions.
         </p>
 
     </div>
 
-    <div class="grid grid-3 mt-14">
+    <div class="brief-card glass">
 
-        <div class="card glass student-card">
-
-            <img src="https://images.unsplash.com/photo-1494526585095-c41746248156?q=80&w=1200&auto=format&fit=crop">
-
-            <div class="student-content">
-
-                <div class="badge mb-4">
-                    Merit #01
-                </div>
-
-                <h3>Ariana Rahman</h3>
-
-                <p>
-                    Roll: 26101001
-                </p>
-
-                <p class="mt-4">
-                    Climate-adaptive futuristic urban architecture systems.
-                </p>
-
-            </div>
-
-        </div>
-
-        <div class="card glass student-card">
-
-            <img src="https://images.unsplash.com/photo-1518005020951-eccb494ad742?q=80&w=1200&auto=format&fit=crop">
-
-            <div class="student-content">
-
-                <div class="badge mb-4">
-                    Merit #02
-                </div>
-
-                <h3>Rayhan Karim</h3>
-
-                <p>
-                    Roll: 26101002
-                </p>
-
-                <p class="mt-4">
-                    Intelligent AI-integrated public infrastructure.
-                </p>
-
-            </div>
-
-        </div>
-
-        <div class="card glass student-card">
-
-            <img src="https://images.unsplash.com/photo-1529429617124-aee711a5ac1c?q=80&w=1200&auto=format&fit=crop">
-
-            <div class="student-content">
-
-                <div class="badge mb-4">
-                    Merit #03
-                </div>
-
-                <h3>Nova Islam</h3>
-
-                <p>
-                    Roll: 26101003
-                </p>
-
-                <p class="mt-4">
-                    Organic cybernetic modular architecture.
-                </p>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-<!-- =========================
-LOGO SECTION
-========================= -->
-
-<section class="page-section" id="logo">
-
-    <div class="section-title">
-
-        <h2>3D Identity Logo</h2>
+        <h3>
+            About Our Department
+        </h3>
 
         <p>
-            The primary symbolic architecture identity system designed for BRAC Architecture Summer 26.
+            The Department of Architecture emphasizes modern urban thinking, sustainable ecosystems, experimental structural systems, and future-oriented design intelligence. Students are encouraged to merge artistic creativity with advanced technological architecture methodologies.
         </p>
 
     </div>
 
-    <div class="hero mt-20">
+</div>
 
-        <div class="logo-3d-container">
+<!-- =========================================
+NEW SHOWCASE
+========================================= -->
 
-            <div class="logo-3d">
-                <span>BA</span>
-            </div>
+<div class="arch-showcase">
 
-        </div>
+    <div class="showcase-title">
 
-        <div>
+        <small>
+            CAMPUS ECOSYSTEM VIEW
+        </small>
 
-            <h2 class="text-5xl font-bold mb-8">
-                Design Philosophy
-            </h2>
-
-            <p class="text-gray-400 leading-8 text-lg">
-                The logo represents futuristic educational evolution, digital architecture intelligence, spatial creativity, and cyber-modern institutional identity. The rotating 3D structure symbolizes constant growth, innovation, and transformation.
-            </p>
-
-            <div class="glass p-8 rounded-[30px] mt-10">
-
-                <h3 class="text-2xl font-bold mb-4">
-                    Designer Brief
-                </h3>
-
-                <p class="text-gray-400 leading-8">
-                    Created to blend modern cyber aesthetics with premium institutional identity systems while maintaining a futuristic architecture-inspired visual language.
-                </p>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-<!-- =========================
-CONTACT
-========================= -->
-
-<section class="page-section" id="contact">
-
-    <div class="section-title">
-
-        <h2>Contact</h2>
+        <h2>
+            360° Circular Architecture Showcase
+        </h2>
 
         <p>
-            Send messages directly through your default email compose system.
+            Smooth automatic rotation with interactive depth control and immersive architectural storytelling.
         </p>
 
     </div>
 
-    <div class="contact-grid mt-16">
+    <div class="arch-rotator">
 
-        <div class="glass p-8 rounded-[30px]">
+        <div class="arch-card glass">
 
-            <h3 class="text-3xl font-bold mb-8">
-                Send Message
-            </h3>
+            <img src="https://images.unsplash.com/photo-1511818966892-d7d671e672a2?q=80&w=1400&auto=format&fit=crop">
 
-            <div class="space-y-5">
-
-                <input type="text" id="name" placeholder="Your Name">
-
-                <input type="email" id="email" placeholder="Your Email">
-
-                <textarea id="message" placeholder="Your Message"></textarea>
-
-                <button class="btn btn-primary" onclick="sendMail()">
-                    Open Email Compose
-                </button>
-
-            </div>
+            <span>
+                01. Innovation Tower
+            </span>
 
         </div>
 
-        <div class="glass p-8 rounded-[30px]">
+        <div class="arch-card glass">
 
-            <h3 class="text-3xl font-bold mb-8">
-                Information
+            <img src="https://images.unsplash.com/photo-1494526585095-c41746248156?q=80&w=1400&auto=format&fit=crop">
+
+            <span>
+                02. Library Hub
+            </span>
+
+        </div>
+
+        <div class="arch-card glass">
+
+            <img src="https://images.unsplash.com/photo-1518005020951-eccb494ad742?q=80&w=1400&auto=format&fit=crop">
+
+            <span>
+                03. Eco Garden
+            </span>
+
+        </div>
+
+        <div class="arch-card glass">
+
+            <img src="https://images.unsplash.com/photo-1529429617124-aee711a5ac1c?q=80&w=1400&auto=format&fit=crop">
+
+            <span>
+                04. Studio Core
+            </span>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- =========================================
+LOGO VIDEO SECTION
+========================================= -->
+
+<div class="logo-video glass">
+
+    <video controls poster="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1200&auto=format&fit=crop">
+
+        <source src="your-logo-making-video.mp4" type="video/mp4">
+
+    </video>
+
+</div>
+
+<!-- =========================================
+CONTACT UPDATE
+========================================= -->
+
+<div class="contact-wrapper">
+
+    <div class="contact-card glass">
+
+        <h2 class="text-4xl font-bold mb-8">
+            Contact Administration
+        </h2>
+
+        <p class="text-gray-400 leading-8">
+            Connect directly with the administrative and development team through email, WhatsApp, or physical campus location.
+        </p>
+
+        <div class="contact-btns">
+
+            <a href="mailto:summer26@bracarch.edu"
+               class="contact-btn">
+
+                📧 Email Admin
+
+            </a>
+
+            <a href="https://wa.me/8801000000000"
+               class="contact-btn">
+
+                💬 WhatsApp
+
+            </a>
+
+        </div>
+
+        <div class="mt-10">
+
+            <h3 class="text-2xl font-bold mb-4">
+                University Location
             </h3>
 
             <p class="text-gray-400 leading-8">
-                Cyber-futuristic architecture showcase platform for BRAC Architecture Summer 26.
+                BRAC University, Merul Badda, Dhaka 1212, Bangladesh
             </p>
 
         </div>
 
     </div>
 
-</section>
+    <div>
+
+        <iframe
+            class="map-frame"
+            src="https://maps.google.com/maps?q=BRAC%20University&t=&z=15&ie=UTF8&iwloc=&output=embed">
+        </iframe>
+
+    </div>
+
+</div>
 
 <script>
 
-/* =========================
-CUSTOM CURSOR
-========================= */
+/* =========================================
+EXPAND / CLOSE SHOWCASE IMAGE
+========================================= */
 
-const cursor = document.querySelector('.cursor');
-const dot = document.querySelector('.cursor-dot');
+document.querySelectorAll('.arch-card').forEach(card=>{
 
-window.addEventListener('mousemove',e=>{
+    card.addEventListener('click',()=>{
 
-    cursor.style.left = e.clientX + 'px';
-    cursor.style.top = e.clientY + 'px';
-
-    dot.style.left = e.clientX + 'px';
-    dot.style.top = e.clientY + 'px';
-
-});
-
-/* =========================
-SINGLE PAGE SWITCH
-========================= */
-
-const links = document.querySelectorAll('.nav-links a');
-const sections = document.querySelectorAll('.page-section');
-
-function showPage(id){
-
-    sections.forEach(section=>{
-        section.classList.remove('active');
-    });
-
-    document.getElementById(id).classList.add('active');
-
-    links.forEach(link=>{
-        link.classList.remove('active');
-
-        if(link.dataset.page === id){
-            link.classList.add('active');
-        }
-    });
-
-    window.scrollTo({
-        top:0,
-        behavior:'smooth'
-    });
-}
-
-links.forEach(link=>{
-
-    link.addEventListener('click',e=>{
-
-        e.preventDefault();
-
-        showPage(link.dataset.page);
+        card.classList.toggle('active');
 
     });
 
 });
 
-/* =========================
-EMAIL COMPOSE
-========================= */
+/* =========================================
+STUDENT GLASS MOUSE EFFECT
+========================================= */
 
-function sendMail(){
+document.querySelectorAll('.student-card').forEach(card=>{
 
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const message = document.getElementById('message').value;
+    card.addEventListener('mousemove',e=>{
 
-    const subject = encodeURIComponent(
-        "BRAC Architecture Summer 26 Message"
-    );
+        const rect = card.getBoundingClientRect();
 
-    const body = encodeURIComponent(
-`Name: ${name}
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
 
-Email: ${email}
+        card.style.setProperty('--x', x + 'px');
+        card.style.setProperty('--y', y + 'px');
 
-Message:
-${message}`
-    );
+    });
 
-    window.location.href =
-        `mailto:summer26@bracarch.edu?subject=${subject}&body=${body}`;
-}
+});
 
 </script>
-
-</body>
-</html>
